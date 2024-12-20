@@ -1,7 +1,7 @@
 project("DeepSDF")
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};/app/vcpkg/installed/x64-linux")
+set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};/workspace/vcpkg/installed/x64-linux")
 find_package(CLI11 CONFIG REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(nanoflann REQUIRED)

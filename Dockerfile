@@ -1,5 +1,6 @@
-FROM se3-equi:latest
+FROM nvcr.io/nvidia/pytorch:22.12-py3
 LABEL authors="mangelini2"
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
 #RUN apt install -y libcli11-dev libnanoflann-dev git build-essential
 RUN git clone https://github.com/Microsoft/vcpkg.git
@@ -20,8 +21,10 @@ RUN vcpkg/vcpkg update
 RUN vcpkg/vcpkg install cli11 nanoflann
 RUN apt install -y vim
 WORKDIR /app/workspace
-RUN git clone https://github.com/mangelini2/DeepSDF.git
+RUN git clone --recursive https://github.com/mangelini2/DeepSDF.git
+
 WORKDIR /app/workspace/DeepSDF
+RUN git checkout cli11
 RUN git clone https://github.com/stevenlovegrove/Pangolin.git && \
     cd Pangolin && \
     git checkout v0.6 &&\
@@ -30,9 +33,19 @@ RUN git clone https://github.com/stevenlovegrove/Pangolin.git && \
     cmake .. && \
     cmake --build .
 RUN mkdir build
-RUN ls
-RUN cmake -S . -B ./build
-RUN cd build &&\
-    make -j
+WORKDIR /app
+
+RUN pip install -U pip
+RUN pip install plyfile
+RUN pip install -U scikit-image
+RUN pip install trimesh
+RUN pip install mesh-to-sdf
+RUN python3 -c "import skimage; print(skimage.__version__)"
+#RUN ls
+#
+#WORKDIR /app/workspace/DeepSDF
+#RUN cmake -S . -B ./build
+#RUN cd build &&\
+#    make -j
 
 SHELL ["/bin/bash","-c"]
